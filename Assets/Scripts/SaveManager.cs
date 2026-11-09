@@ -4,7 +4,7 @@ public class SaveManager : MonoBehaviour
 {
     public static SaveManager instance;    // Single shared reference so other scripts can save/load easily
 
-    void Start()
+    void Awake()
     {
         instance = this;
     }

@@ -12,6 +12,10 @@ public class GameManager : MonoBehaviour
     public GameObject gameOverPanel;
     public TextMeshProUGUI highScoreText;
     public TextMeshProUGUI feedbackText;
+    public TextMeshProUGUI healthText;          // HUD: current health
+    public TextMeshProUGUI powerUpText;         // HUD: active power-up status
+    public TextMeshProUGUI hudHighScoreText;    // HUD: saved high score shown during play
+
 
     public int totalCollectiblesNeeded = 10;   // How many items must be collected to win
     public GameObject winPanel;                // Shown when the win condition is met
@@ -24,9 +28,16 @@ public class GameManager : MonoBehaviour
     private bool isPaused = false;
     private bool gameEnded = false;            // True once the player has won or died, blocks pausing afterward
     private int waveNumber = 1;
-    void Start()
+    void Awake()
     {
         instance = this;
+    }
+
+    void Start()
+    {
+        // Set the HUD's starting values once everything has been created
+        UpdateHighScoreUI();
+        UpdatePowerUpUI("None");
     }
 
     void Update()
@@ -70,6 +81,24 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(1.5f);
 
         feedbackText.gameObject.SetActive(false);
+    }
+    // Refreshes the on-screen health display. Clamped at 0 so the enemy's instant
+    // kill (999 damage) doesn't show a huge negative number
+    public void UpdateHealthUI(int currentHealth)
+    {
+        healthText.text = "Health: " + Mathf.Max(0, currentHealth);
+    }
+
+    // Shows which power-up (if any) is currently active
+    public void UpdatePowerUpUI(string status)
+    {
+        powerUpText.text = "Power-Up: " + status;
+    }
+
+    // Shows the saved high score on the HUD during play
+    void UpdateHighScoreUI()
+    {
+        hudHighScoreText.text = "High Score: " + SaveManager.instance.LoadHighScore();
     }
 
     // Checks if enough items have been collected to win, and shows the Win panel if so

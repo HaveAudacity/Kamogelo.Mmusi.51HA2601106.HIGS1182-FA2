@@ -29,11 +29,13 @@ public class PowerUpManager : MonoBehaviour
     private IEnumerator ThrusterBoostRoutine()
     {
         Debug.Log("Thruster boost activated");
+        GameManager.instance.UpdatePowerUpUI("Thruster Boost");
         playerController.moveSpeed *= boostMultiplier;
 
         yield return new WaitForSeconds(boostDuration);
 
         playerController.moveSpeed /= boostMultiplier;
         Debug.Log("Thruster boost ended");
+        GameManager.instance.UpdatePowerUpUI("None");
     }
 }

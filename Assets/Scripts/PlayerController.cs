@@ -21,6 +21,7 @@ public class PlayerController : MonoBehaviour
         yaw = transform.eulerAngles.y;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        GameManager.instance.UpdateHealthUI(health);
     }
 
     void Update()
@@ -125,6 +126,7 @@ public class PlayerController : MonoBehaviour
     {
         health -= amount;
         Debug.Log("Player health: " + health);
+        GameManager.instance.UpdateHealthUI(health);
         AudioManager.instance.PlaySound(AudioManager.instance.hitSound);
         GameManager.instance.ShowFeedback("Hit! Health: " + health);
         if (health <= 0)

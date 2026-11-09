@@ -8,12 +8,16 @@ public class Projectile : MonoBehaviour
 
     void Start()
     {
-        // Launch the laser forward using physics velocity, and auto-destroy after 3 seconds
-        // so it doesn't fly forever and clutter the scene
+        Launch();
+    }
+    // Launches the laser forward using physics velocity, and schedules it to
+    // self-destruct after 3 seconds so stray lasers don't clutter the scene
+    void Launch()
+    {
         GetComponent<Rigidbody>().linearVelocity = transform.forward * speed;
         Destroy(gameObject, 3f);
+        Debug.Log("Laser launched");
     }
-
     void Update()
     {
 
