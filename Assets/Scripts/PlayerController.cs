@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour
     public GameObject laserPrefab;         // The laser prefab spawned when shooting
     public Transform firePoint;            // Marks where lasers spawn from (front of the player)
     public int health = 3;                 // Player's current health, starts at 3
-   
+    public AnimationController animationController;   // Reference to the ship's animation script
+
     public float mouseSensitivity = 3f;
     private float yaw;
     private float pitch;
@@ -37,9 +38,11 @@ public class PlayerController : MonoBehaviour
         // so movement follows wherever the player has rotated to via the mouse
         Vector3 movement = new Vector3(horizontal, 0f, vertical);
         transform.Translate(movement * moveSpeed * Time.deltaTime, Space.Self);
+        // True while any movement key is held, so the Animator can switch between idle and moving
+        bool isMoving = horizontal != 0f || vertical != 0f;
+        animationController.SetMoving(isMoving);
 
-       
-      
+
         MouseLook();
 
         if (Input.GetMouseButtonDown(0))
@@ -74,7 +77,7 @@ public class PlayerController : MonoBehaviour
         }
 
         Debug.Log("Player fired");
-      
+        animationController.TriggerShoot();
         AudioManager.instance.PlaySound(AudioManager.instance.shootSound);
     }
 
@@ -127,6 +130,7 @@ public class PlayerController : MonoBehaviour
         if (health <= 0)
         {
             isDead = true;
+            animationController.TriggerDie();
             GameManager.instance.GameOver();
         }
     }
